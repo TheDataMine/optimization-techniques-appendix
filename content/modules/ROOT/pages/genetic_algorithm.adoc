@@ -30,20 +30,25 @@ def objective(x, profit, weight, weight_limit):
     return total_profit - total_penalty
 ----
 
-NOTE: The `total_penalty` calculation above has an arbitrary 1000 tacked on to the end. I wonder what happens if we remove it? (Hint: if the penalty isn't strong enough the model will break the rules... bad model.)
+[NOTE]
+====
+The `total_penalty` calculation above has an arbitrary 1000 tacked on to the end. I wonder what happens if we remove it? 
 
-Once we have an idea of what we want to optimize we can build the strucutre of the algorithm. 
+**Hint:** If the penalty isn't strong enough the model will break the rules... bad model.
+====
+
+Once we have an idea of what we want to optimize we can build the structure of the algorithm. 
 
 == Creating the Algorithm
 
-The basic framework of a genetic algorithm is highlighted below. We'll be working through each framework step in the follwing sections. 
+The basic framework of a genetic algorithm is highlighted below. We'll be working through each framework step in the following sections. 
 
 - Generate the population. 
 - Get a baseline for model performance. 
 - Iterate through generations. 
 - For each generation find the best objective score for the current population. 
 - Using those best scores create children objects for the next population. 
-- Occsionally mutate some of the children (not as bad as it sounds).
+- Occasionally mutate some of the children (not as bad as it sounds).
 - Run it all again!
 
 === Generating the Population
@@ -88,7 +93,7 @@ def decode(bounds, n_bits, bitstring, type_of_scale='default'):
     return decoded
 ----
 
-In this method the full bit string is passed in and then broken into 5 sets of 16 bit values. These values are then translated into `str` types and then finally into `int` types. This transaltion gives us our value for the algorithm. For example, `[0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]` turns into 21,835. 
+In this method the full bit string is passed in and then broken into 5 sets of 16 bit values. These values are then translated into `str` types and then finally into `int` types. This translation gives us our value for the algorithm. For example, `[0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]` turns into 21,835. 
 
 These values are then scaled to ensure that they fit into the range of possible values that we are looking for. In this example 21,835 is changed to 2 after rounding.  
 
@@ -105,7 +110,10 @@ def updated_scaling(bounds, biggest_possible_int, smallest_possible_int, i, num_
 
 In this case either one of the scaling methods above can be used. The first method works well for values of 0 or more (no negative) and the second can accept all values. 
 
-NOTE: For this specific knapsack problem the values are rounded to whole numbers using `np.round()`. This may not be needed for other use cases. 
+[NOTE]
+====
+For this specific knapsack problem the values are rounded to whole numbers using `np.round()`. This may not be needed for other use cases. 
+====
 
 To get a baseline for our values we can just decode an evaluate the first item in the population. 
 
@@ -132,15 +140,22 @@ for gen in range(n_iter):
                 print("New best! {} | {} | {}".format(gen, decoded[i], scores[i]))
 ----
 
-This part decodes all of the population bit strings, calcualtes their scores, and then compares them against all the other values. The best score is noted for future generations. 
+This part decodes all of the population bit strings, calculates their scores, and then compares them against all the other values. The best score is noted for future generations. 
 
-NOTE: This is the section of the code where you decide if you are going to maximize or minimize your objective function. Choose the `scores[i] > best_eval` symbol (> or <) depending on if you want to keep greater or lesser scores. 
+[NOTE]
+====
+This is the section of the code where you decide if you are going to maximize or minimize your objective function. Choose the `scores[i] > best_eval` symbol (> or <) depending on if you want to keep greater or lesser scores.
+====
+ 
 
 The second part of the generation loop involves selecting the best parents and creating the next generation. 
 
-Making this sound even more gladitorial, the technique that we went with for the example uses `tournament` selection. 
+Making this sound even more gladiatorial, the technique that we went with for the example uses `tournament` selection. 
 
-NOTE: There are other selection techniques, such as roulette, that can be used depending on the case. 
+[NOTE]
+====
+There are other selection techniques, such as roulette, that can be used depending on the case.
+====
 
 A more verbose example of how the tournament selection works is included below. 
 
